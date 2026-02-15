@@ -1,0 +1,278 @@
+{% liquid
+  assign autoplay_ms = section.settings.autoplay_seconds | times: 1000
+  assign overlay_alpha = section.settings.overlay_opacity | times: 0.01
+  assign button_label = section.settings.button_label | default: 'Shop Now'
+  assign default_button_url = section.settings.default_button_url | default: '/collections/all'
+
+  assign slide_1_video = section.settings.slide_1_video_url | default: 'https://framerusercontent.com/assets/eET0TAV4ZCWf3khw435DeEtDclA.mp4'
+  assign slide_2_video = section.settings.slide_2_video_url | default: 'https://framerusercontent.com/assets/bTNoylq5Cj6USTc6TryXsNEAaQ.mp4'
+  assign slide_3_video = section.settings.slide_3_video_url | default: 'https://framerusercontent.com/assets/OvEjoDHbnIYpFKPNcu4B7ECsHM.mp4'
+  assign slide_1_link = section.settings.slide_1_link | default: default_button_url
+  assign slide_2_link = section.settings.slide_2_link | default: default_button_url
+  assign slide_3_link = section.settings.slide_3_link | default: default_button_url
+%}
+
+{{ 'refeet-hero-slider.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'refeet-hero-slider.js' | asset_url }}" defer="defer"></script>
+
+<section class="refeet-hero-slider-section" data-section-id="{{ section.id }}">
+  <div
+    class="refeet-hero-slider"
+    id="RefeetHeroSlider-{{ section.id }}"
+    data-autoplay-ms="{{ autoplay_ms }}"
+    style="
+      --refeet-height-desktop: {{ section.settings.height_desktop }}vh;
+      --refeet-height-mobile: {{ section.settings.height_mobile }}vh;
+      --refeet-overlay-color: {{ section.settings.overlay_color }};
+      --refeet-overlay-alpha: {{ overlay_alpha }};
+    "
+  >
+    <article class="refeet-hero-slider__slide is-active" data-slide-index="0" aria-hidden="false">
+      <video class="refeet-hero-slider__video" muted loop playsinline preload="metadata" autoplay>
+        <source src="{{ slide_1_video | escape }}" type="video/mp4">
+      </video>
+      <div class="refeet-hero-slider__overlay"></div>
+      <div class="refeet-hero-slider__content">
+        <div class="refeet-hero-slider__content-inner">
+          <div class="refeet-hero-slider__copy">
+            <h2 class="refeet-hero-slider__title">
+              <span>{{ section.settings.slide_1_heading_line_1 | escape }}</span>
+              <span>{{ section.settings.slide_1_heading_line_2 | escape }}</span>
+            </h2>
+            <p class="refeet-hero-slider__description">{{ section.settings.slide_1_description | escape }}</p>
+            <a class="refeet-hero-slider__button" href="{{ slide_1_link }}">{{ button_label | escape }}</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="refeet-hero-slider__slide" data-slide-index="1" aria-hidden="true">
+      <video class="refeet-hero-slider__video" muted loop playsinline preload="metadata">
+        <source src="{{ slide_2_video | escape }}" type="video/mp4">
+      </video>
+      <div class="refeet-hero-slider__overlay"></div>
+      <div class="refeet-hero-slider__content">
+        <div class="refeet-hero-slider__content-inner">
+          <div class="refeet-hero-slider__copy">
+            <h2 class="refeet-hero-slider__title">
+              <span>{{ section.settings.slide_2_heading_line_1 | escape }}</span>
+              <span>{{ section.settings.slide_2_heading_line_2 | escape }}</span>
+            </h2>
+            <p class="refeet-hero-slider__description">{{ section.settings.slide_2_description | escape }}</p>
+            <a class="refeet-hero-slider__button" href="{{ slide_2_link }}">{{ button_label | escape }}</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="refeet-hero-slider__slide" data-slide-index="2" aria-hidden="true">
+      <video class="refeet-hero-slider__video" muted loop playsinline preload="metadata">
+        <source src="{{ slide_3_video | escape }}" type="video/mp4">
+      </video>
+      <div class="refeet-hero-slider__overlay"></div>
+      <div class="refeet-hero-slider__content">
+        <div class="refeet-hero-slider__content-inner">
+          <div class="refeet-hero-slider__copy">
+            <h2 class="refeet-hero-slider__title">
+              <span>{{ section.settings.slide_3_heading_line_1 | escape }}</span>
+              <span>{{ section.settings.slide_3_heading_line_2 | escape }}</span>
+            </h2>
+            <p class="refeet-hero-slider__description">{{ section.settings.slide_3_description | escape }}</p>
+            <a class="refeet-hero-slider__button" href="{{ slide_3_link }}">{{ button_label | escape }}</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="refeet-hero-slider__controls-wrap">
+      <div class="refeet-hero-slider__controls" role="tablist" aria-label="Slider pagination">
+        {% for item in (1..3) %}
+          <button
+            type="button"
+            class="refeet-hero-slider__control{% if forloop.first %} is-active{% endif %}"
+            data-slide-control="{{ forloop.index0 }}"
+            aria-label="Go to slide {{ forloop.index }}"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            <svg viewBox="0 0 100 100" class="refeet-hero-slider__progress" aria-hidden="true">
+              <circle class="refeet-hero-slider__progress-track" cx="50" cy="50" r="44"></circle>
+              <circle class="refeet-hero-slider__progress-bar" cx="50" cy="50" r="44"></circle>
+            </svg>
+            <span class="refeet-hero-slider__control-number">{{ forloop.index }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Refeet hero slider",
+  "tag": "section",
+  "class": "section section-refeet-hero-slider",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Desktop height",
+      "unit": "vh",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Mobile height",
+      "unit": "vh",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "autoplay_seconds",
+      "label": "Autoplay interval",
+      "unit": "s",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "unit": "%",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "default_button_url",
+      "label": "Default button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_video_url",
+      "label": "Slide 1 video URL",
+      "default": "https://framerusercontent.com/assets/eET0TAV4ZCWf3khw435DeEtDclA.mp4"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_heading_line_1",
+      "label": "Slide 1 heading line 1",
+      "default": "Recycled Kicks."
+    },
+    {
+      "type": "text",
+      "id": "slide_1_heading_line_2",
+      "label": "Slide 1 heading line 2",
+      "default": "Regenerative Future."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_1_description",
+      "label": "Slide 1 description",
+      "default": "Walk lighter in shoes made from reclaimed materials."
+    },
+    {
+      "type": "url",
+      "id": "slide_1_link",
+      "label": "Slide 1 button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_video_url",
+      "label": "Slide 2 video URL",
+      "default": "https://framerusercontent.com/assets/bTNoylq5Cj6USTc6TryXsNEAaQ.mp4"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_heading_line_1",
+      "label": "Slide 2 heading line 1",
+      "default": "Recycled Threads."
+    },
+    {
+      "type": "text",
+      "id": "slide_2_heading_line_2",
+      "label": "Slide 2 heading line 2",
+      "default": "Sustainable Tomorrow."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_2_description",
+      "label": "Slide 2 description",
+      "default": "Tread forward with soles crafted from the past."
+    },
+    {
+      "type": "url",
+      "id": "slide_2_link",
+      "label": "Slide 2 button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_video_url",
+      "label": "Slide 3 video URL",
+      "default": "https://framerusercontent.com/assets/OvEjoDHbnIYpFKPNcu4B7ECsHM.mp4"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_heading_line_1",
+      "label": "Slide 3 heading line 1",
+      "default": "Used Plastics."
+    },
+    {
+      "type": "text",
+      "id": "slide_3_heading_line_2",
+      "label": "Slide 3 heading line 2",
+      "default": "Endless Possibilities."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_3_description",
+      "label": "Slide 3 description",
+      "default": "Step into comfort with upcycled innovation."
+    },
+    {
+      "type": "url",
+      "id": "slide_3_link",
+      "label": "Slide 3 button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Refeet hero slider"
+    }
+  ]
+}
+{% endschema %}

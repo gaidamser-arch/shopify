@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "refeet_hero_slider": {
+      "type": "refeet-hero-slider",
+      "settings": {}
+    }
+  },
+  "order": [
+    "refeet_hero_slider"
+  ]
+}
